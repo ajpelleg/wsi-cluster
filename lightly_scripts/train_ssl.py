@@ -16,7 +16,7 @@ import torch.nn as nn
 import torch.nn.utils as nn_utils
 from torch.utils.data import Dataset, DataLoader
 
-from sklearn.model_selection import GroupShuffleSplit
+from sklearn.model_selection import GroupShuffleSplit, train_test_split
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint, Callback
 
@@ -50,17 +50,6 @@ class PatchDataset(Dataset):
         filename = os.path.basename(path)
         return (v0, v1), label, filename
         
-        
-#class ImageDataset(Dataset):
-#    """Used for DINO: collate_fn will do *all* the crops."""
-#    def __init__(self, file_paths):
-#        self.file_paths = file_paths
-#    def __len__(self):
-#        return len(self.file_paths)
-#    def __getitem__(self, idx):
-#        img = Image.open(self.file_paths[idx]).convert("RGB")
-#        fname = os.path.basename(self.file_paths[idx])
-#        return img, idx, fname
 
 # ─────────────────────────────────────────────────────────────────────────────
 class MetricsLogger(Callback):
@@ -90,8 +79,8 @@ def parse_args():
     )
     parser.add_argument("--data_dir",    default="features/data",
                         help="Up-level data directory")
-    parser.add_argument("--image_folder", default="tumor_segmentation_v2_05mpp_256/tiles/images")
-    parser.add_argument("--output_dir",  default="features/checkpoints")
+    parser.add_argument("--image_folder", default="tumor_segmentation_v2_05mpp_256/tiles/images", help="Folder in which your target images lie")
+    parser.add_argument("--output_dir",  default="results/")
     parser.add_argument("--method",      choices=["simclr","moco","dino","densecl"], required=True)
     parser.add_argument("--backbone",    choices=["resnet18","resnet50"], default="resnet50")
     parser.add_argument("--batch_size",  type=int, default=64)
@@ -104,6 +93,7 @@ def parse_args():
     parser.add_argument("--save_top_k",  type=int, default=1)
     parser.add_argument("--seed",        type=int, default=None)
     parser.add_argument("--run_name",    type=str, default=None)
+    parser.add_argument("--occ_split", action="store_true", help="Use OCC-specific splitting. If not set, perform a regular random split")
     return parser.parse_args()
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -113,6 +103,14 @@ def train_val_split(file_paths, val_frac):
     splitter = GroupShuffleSplit(n_splits=1, test_size=val_frac, random_state=42)
     train_idx, val_idx = next(splitter.split(file_paths, groups=groups))
     return [file_paths[i] for i in train_idx], [file_paths[i] for i in val_idx]
+
+def regular_split(file_paths, val_frac):
+    train_paths, val_paths = train_test_split(
+        file_paths,
+        test_size=val_frac,
+        random_state=42
+    )
+    return train_paths, val_paths
 
 # ─────────────────────────────────────────────────────────────────────────────
 class SSLModel(pl.LightningModule):
@@ -398,7 +396,14 @@ def main():
         for f in os.listdir(image_dir)
         if f.lower().endswith((".png",".jpg",".jpeg"))
     )
-    train_files, val_files = train_val_split(file_paths, args.val_split)
+    if args.occ_split:
+        print("Using OCC split...")
+        train_paths, val_paths = train_val_split(file_paths, args.val_split)
+    else:
+        print("Using regular random split...")
+        train_paths, val_paths = regular_split(file_paths, args.val_split)
+    
+    #train_files, val_files = train_val_split(file_paths, args.val_split)
 
     # 4.3 backbone → transform → head → criterion
     resnet = getattr(tv_models, args.backbone)(pretrained=True)
