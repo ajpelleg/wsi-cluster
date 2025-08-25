@@ -13,8 +13,6 @@
 
 #SBATCH --job-name="ssl_train"
 #SBATCH --output=logs/ssl_train_%j.log
-#SBATCH --mail-user=ajpelleg@buffalo.edu
-#SBATCH --mail-type=ALL
 #SBATCH --requeue
 
 echo "=== Job Info ==="
@@ -29,14 +27,14 @@ METHOD=${METHOD:-simclr}
 BACKBONE=${BACKBONE:-resnet50}
 BATCH_SIZE=${BATCH_SIZE:-64}
 EPOCHS=${EPOCHS:-100}
-LR=${LR:-}             # if empty, train_ssl.py computes default
+LR=${LR:-5e-3}
 WEIGHT_DECAY=${WEIGHT_DECAY:-1e-6}
 VAL_SPLIT=${VAL_SPLIT:-0.2}
 NUM_WORKERS=${NUM_WORKERS:-8}
 
-DATA_DIR="/PathLDM/features/data"
-IMAGE_FOLDER="tumor_segmentation_v2_05mpp_256/tiles/images"
-OUTPUT_DIR="/PathLDM/experiments/${METHOD}"
+DATA_DIR="/wsi-cluster/data" #<----change this to your base path of the images folder 
+IMAGE_FOLDER="tumor_segmentation_v2_05mpp_256/tiles/images" #<----this is the specific folder where your images are
+OUTPUT_DIR="/wsi-cluster/experiments/${METHOD}" #<-----
 
 
 echo "=== Hyperparameters ==="
@@ -44,7 +42,7 @@ echo "Method:        $METHOD"
 echo "Backbone:      $BACKBONE"
 echo "Batch size:    $BATCH_SIZE"
 echo "Epochs:        $EPOCHS"
-echo "Learning rate: ${LR:-(auto)}"
+echo "Learning rate: $LR"
 echo "Weight decay:  $WEIGHT_DECAY"
 echo "Val split:     $VAL_SPLIT"
 echo "Workers:       $NUM_WORKERS"
@@ -59,8 +57,8 @@ apptainer exec --nv \
   -B /projects/academic/sunycell/PathLDM:/PathLDM \
   /projects/academic/sunycell/apptainers/pytorch26.sif \
   bash -lc "\
-    cd /PathLDM/lightly_scripts && \
-    source /PathLDM/miniconda/etc/profile.d/conda.sh && \
+    cd /wsi-cluster/lightly_scripts && \
+    source /wsi-cluster/miniconda/etc/profile.d/conda.sh && \
     conda activate lightly_train && \
     python train_ssl.py \
       --method        $METHOD \
@@ -76,7 +74,6 @@ apptainer exec --nv \
       --output_dir    $OUTPUT_DIR \
       --gpus          1 \
       --save_top_k    1
-
   "
 echo "Training complete."
 
