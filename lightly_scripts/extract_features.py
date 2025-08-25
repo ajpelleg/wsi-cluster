@@ -24,6 +24,7 @@ from lightly.models.modules.heads import (
     DenseCLProjectionHead,
 )
 
+from train_ssl import SSLModel
 # 1) Simple inference dataset for single-view loading
 class InferenceDataset(Dataset):
     def __init__(self, file_paths, preprocess):
@@ -53,10 +54,9 @@ def main():
     parser.add_argument("--output_root",  default="/PathLDM/experiments/features")
     args = parser.parse_args()
 
+    
     # ─────────────────────────────────────────────────────────────────────────────
     # 2) Rebuild model & load weights
-    # ─────────────────────────────────────────────────────────────────────────────
-
     # 2a) Load the saved config.json from the same folder as your .ckpt
     ckpt_dir = os.path.dirname(args.ckpt)
     cfg_path = os.path.join(ckpt_dir, "config.json")
@@ -105,7 +105,7 @@ def main():
         raise ValueError(f"Unknown method '{method}'")
 
     # 2d) Import and instantiate your LightningModule
-    from train_ssl import SSLModel
+    
     model = SSLModel(
         backbone       = backbone,
         head           = head,
@@ -122,8 +122,7 @@ def main():
     model.eval().cuda()
 
     # ─────────────────────────────────────────────────────────────────────────────
-    # 3) Decide a simple “extract” function for your method
-    # ─────────────────────────────────────────────────────────────────────────────
+
     if method == "densecl":
         def extract(x):
             _, g, _ = model(x)
@@ -143,7 +142,7 @@ def main():
 
     # ─────────────────────────────────────────────────────────────────────────────
     # 4) Build standard torchvision preprocessing from default_cfg
-    # ─────────────────────────────────────────────────────────────────────────────
+
     cfg_back = getattr(model.backbone, "default_cfg", {}) or {}
     H, W        = cfg_back.get("input_size", (3,224,224))[1:]
     crop_pct    = cfg_back.get("crop_pct", 0.875)
@@ -160,7 +159,7 @@ def main():
 
     # ─────────────────────────────────────────────────────────────────────────────
     # 5) Gather all image files & DataLoader
-    # ─────────────────────────────────────────────────────────────────────────────
+
     image_dir = os.path.join(args.data_dir, args.image_folder)
     file_paths = sorted([
         os.path.join(image_dir, f)
@@ -178,7 +177,7 @@ def main():
 
     # ─────────────────────────────────────────────────────────────────────────────
     # 6) Prepare output dirs & run inference
-    # ─────────────────────────────────────────────────────────────────────────────
+
     master_dir = os.path.join(args.output_root, method)
     indiv_dir  = os.path.join(master_dir, "individual")
     os.makedirs(indiv_dir, exist_ok=True)
@@ -194,7 +193,7 @@ def main():
 
     # ─────────────────────────────────────────────────────────────────────────────
     # 7) Save the master feature‐dict
-    # ─────────────────────────────────────────────────────────────────────────────
+
     out_master = os.path.join(master_dir, f"{method}_features.pt")
     torch.save(feats_dict, out_master)
     print(f"Saved {len(feats_dict)} patches → {out_master}")
