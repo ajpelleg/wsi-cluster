@@ -22,7 +22,7 @@ echo "GPUs/node: $SLURM_GPUS_ON_NODE"
 echo "CPUs/task: $SLURM_CPUS_PER_TASK"
 echo "================"
 
-VENV_DIR="$HOME/.venvs/wsi-cluster"
+VENV_DIR="$HOME/wsi-cluster"
 DATA_DIR="/path/to/features/data"
 IMAGE_FOLDER="tumor_segmentation_v2_05mpp_256/tiles/images"
 OUTPUT_DIR="results"
