@@ -1,2 +1,29 @@
 # wsi-cluster
-Creates a set of feature embeddings for use in downstream clustering
+
+A reproducible pipeline for **self-supervised learning (SSL) feature embeddings** on whole slide image (WSI) patches.  
+This repo trains SSL models (SimCLR, MoCo, DINO, DenseCL) using PyTorch Lightning + Lightly, then extracts embeddings for downstream clustering or visualization.
+
+---
+## Environment Setup
+
+This repo uses a **Python venv**.  
+
+```bash
+# Create a virtual environment
+python3 -m venv ~/.venvs/wsi-cluster
+source ~/.venvs/wsi-cluster/bin/activate
+
+# Upgrade pip
+pip install --upgrade pip
+
+# Install dependencies (choose CUDA version)
+pip install --index-url https://download.pytorch.org/whl/cu118 -r requirements.txt   # for CUDA 11.8
+# pip install --index-url https://download.pytorch.org/whl/cu121 -r requirements.txt # for CUDA 12.1
+# pip install --index-url https://download.pytorch.org/whl/cpu   -r requirements.txt # CPU only
+```
+
+## Training an SSL Model
+Be sure to check the following:
+*Paths to data
+*Output directory paths
+*Any other paths in train_ssl.slurm
