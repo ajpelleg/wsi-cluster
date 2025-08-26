@@ -20,14 +20,14 @@ echo " GPUs/Node:$SLURM_GPUS_ON_NODE"
 echo " CPUs/Task:$SLURM_CPUS_PER_TASK"
 echo
 
-# these can be overridden later with sbatch export
-CKPT=${CKPT:-"/wsi-cluster/experiments/checkpoints/dino_final.ckpt"}
-METHOD=${METHOD:-"dino"}
-DATA_DIR=${DATA_DIR:-"/features/data"}
-IMAGE_FOLDER=${IMAGE_FOLDER:-"tumor_segmentation_v2_05mpp_256/tiles/images"}
-BATCH_SIZE=${BATCH_SIZE:-64}
-NUM_WORKERS=${NUM_WORKERS:-8}
-OUTPUT_ROOT=${OUTPUT_ROOT:-"/wsi-cluster/experiments/features"}
+VENV_DIR="$HOME/.venvs/wsi-cluster"
+
+CKPT="/wsi-cluster/experiments/dino/lightning_logs/.ckpt # <- set me
+METHOD="dino"                   # simclr|moco|dino|densecl
+DATA_DIR="/wsi-cluster/data"
+IMAGE_FOLDER="tumor_segmentation_v2_05mpp_256/tiles/images"
+BATCH_SIZE=64
+OUTPUT_ROOT="/wsi-cluster/results"
 
 echo "Checkpoint:   $CKPT"
 echo "Method:       $METHOD"
@@ -38,22 +38,17 @@ echo "NumWorkers:   $NUM_WORKERS"
 echo "OutputRoot:   $OUTPUT_ROOT"
 echo
 
-apptainer exec --nv \
-  -B /wsi-cluster:/wsi-cluster \
-  /apptainers/pytorch26.sif \
-bash -lc "
-  cd /wsi-cluster/lightly_scripts
-  source /wsi-cluster/miniconda/etc/profile.d/conda.sh
-  conda activate lightly_train
+mkdir -p logs/extraction "${OUTPUT_ROOT}"
 
-  python extract_features.py \
-    \"$CKPT\" \
-    --method        $METHOD \
-    --data_dir      \"$DATA_DIR\" \
-    --image_folder  \"$IMAGE_FOLDER\" \
-    --batch_size    $BATCH_SIZE \
-    --num_workers   $NUM_WORKERS \
-    --output_root   \"$OUTPUT_ROOT\"
-"
+source "${VENV_DIR}/bin/activate"
 
-echo "Extraction finished for $METHOD"
+srun python -u extract_features.py \
+  "${CKPT}" \
+  --method        "${METHOD}" \
+  --data_dir      "${DATA_DIR}" \
+  --image_folder  "${IMAGE_FOLDER}" \
+  --batch_size    ${BATCH_SIZE} \
+  --num_workers   ${NUM_WORKERS} \
+  --output_root   "${OUTPUT_ROOT}"
+
+echo "Extraction finished."
