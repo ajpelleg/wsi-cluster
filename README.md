@@ -34,7 +34,7 @@ pip install --index-url https://download.pytorch.org/whl/cu118 -r requirements.t
 ```
 
 ## Training an SSL Model
-Be sure to check the following:
+Be sure to check the following, edit lightly_scripts/train_ssl.slurm as necessary:
   * Paths to data
   * Output directory paths
   * Any other paths in train_ssl.slurm
@@ -52,7 +52,7 @@ Checkpoints are saved to: <output_dir>/<run_name>/
 
 **Required**: Point extract_features.slurm to your desired .ckpt file  
 
-Be sure of the following:
+Be sure of the following, edit lightly_scripts/extract_features.slurm as necessary:
  * Method must match the method used in training
  * Check DATA_DIR/IMAGE_FOLDER, this should match as well
  * OUTPUT_ROOT --> where embeddings should be stored
