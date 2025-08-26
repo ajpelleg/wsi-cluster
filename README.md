@@ -27,7 +27,8 @@ Be sure to check the following:
   * Paths to data
   * Output directory paths
   * Any other paths in train_ssl.slurm
-Checkpoints are saved to: <output_dir>/<run_name>/  
+Checkpoints are saved to: <output_dir>/<run_name>/ <br />
+
 Submit the job with the following (from the wsi-cluster root):
 ```bash
 sbatch lightly_scripts/train_ssl.slurm
