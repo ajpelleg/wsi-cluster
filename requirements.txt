@@ -2,8 +2,11 @@
 torch>=1.11.0
 torchvision>=0.12.0
 pytorch-lightning>=2.0.0
+scipy
 lightly
 umap-learn
 scikit-learn
 pillow
 numpy
+pandas
+matplotlib
