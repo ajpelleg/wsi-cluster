@@ -20,9 +20,9 @@ echo " GPUs/Node:$SLURM_GPUS_ON_NODE"
 echo " CPUs/Task:$SLURM_CPUS_PER_TASK"
 echo
 
-VENV_DIR="$HOME/.venvs/wsi-cluster"
+VENV_DIR="$HOME/wsi-cluster"
 
-CKPT="/wsi-cluster/experiments/dino/lightning_logs/.ckpt # <- set me
+CKPT="<output_dir>/<run_name>/<method>-<date>.ckpt # <- set me
 METHOD="dino"                   # simclr|moco|dino|densecl
 DATA_DIR="/wsi-cluster/data"
 IMAGE_FOLDER="tumor_segmentation_v2_05mpp_256/tiles/images"
