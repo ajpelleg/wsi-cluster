@@ -26,7 +26,8 @@ pip install --index-url https://download.pytorch.org/whl/cu118 -r requirements.t
 Be sure to check the following:
   * Paths to data
   * Output directory paths
-  * Any other paths in train_ssl.slurm  
+  * Any other paths in train_ssl.slurm
+  
 Checkpoints are saved to: <output_dir>/<run_name>/
 
 Submit the job with the following (from the wsi-cluster root):
