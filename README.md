@@ -11,7 +11,7 @@ This repo uses a **Python venv**.
 Since the required packages are quite large, request allocations for an interactive job on CCR.
 ```bash
 #Request with salloc command 
-salloc --clusters=faculty --partition=sunycell --qos=sunycell --mem=50G --nodes=1 --time=6:00:00 --ntasks-per-node=1 --gpus-per-node=2 --cpus-per-task=32 --no-shell
+salloc --clusters=faculty --partition=sunycell --qos=sunycell --mem=50G --nodes=1 --time=6:00:00 --ntasks-per-node=1 --gpus-per-node=2 --cpus-per-task=32
 
 #After resources have been allocated, insert given jobid
 srun --jobid=JOBID_HERE --export=HOME,TERM,SHELL --pty /bin/bash --login
@@ -49,5 +49,22 @@ sbatch lightly_scripts/train_ssl.slurm
 
 ## Extracting Features
 Checkpoints are saved to: <output_dir>/<run_name>/  
+
+**Required**: Point extract_features.slurm to your desired .ckpt file  
+
+Be sure of the following:
+ * Method must match the method used in training
+ * Check DATA_DIR/IMAGE_FOLDER, this should match as well
+ * OUTPUT_ROOT --> where embeddings should be stored
+
+Run:  
+
+```bash
+sbatch lightly_scripts/extract_features.slurm
+```
+
+This will produce two things:
+ * Master .pt file containing the embeddings for all patches  
+ * Individual .pt files for each individual patch  
 
 
