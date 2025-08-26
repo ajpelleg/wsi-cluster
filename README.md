@@ -17,7 +17,7 @@ salloc --clusters=faculty --partition=sunycell --qos=sunycell --mem=50G --nodes=
 srun --jobid=JOBID_HERE --export=HOME,TERM,SHELL --pty /bin/bash --login
 ```
 
-Navigate to wsi-cluster root
+Navigate to wsi-cluster root, then:  
 
 ```bash
 # Create a virtual environment (while in wsi-cluster root)
