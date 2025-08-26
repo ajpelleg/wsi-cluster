@@ -398,10 +398,10 @@ def main():
     )
     if args.occ_split:
         print("Using OCC split...")
-        train_paths, val_paths = train_val_split(file_paths, args.val_split)
+        train_files, val_files = train_val_split(file_paths, args.val_split)
     else:
         print("Using regular random split...")
-        train_paths, val_paths = regular_split(file_paths, args.val_split)
+        train_files, val_files = regular_split(file_paths, args.val_split)
     
     #train_files, val_files = train_val_split(file_paths, args.val_split)
 
