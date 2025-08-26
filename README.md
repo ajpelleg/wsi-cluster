@@ -8,6 +8,17 @@ This repo trains SSL models (SimCLR, MoCo, DINO, DenseCL) using PyTorch Lightnin
 
 This repo uses a **Python venv**.  
 
+Since the required packages are quite large, request allocations for an interactive job on CCR.
+```bash
+#Request with salloc command 
+salloc --clusters=faculty --partition=sunycell --qos=sunycell --mem=50G --nodes=1 --time=6:00:00 --ntasks-per-node=1 --gpus-per-node=2 --cpus-per-task=32 --no-shell
+
+#After resources have been allocated, insert given jobid
+srun --jobid=JOBID_HERE --export=HOME,TERM,SHELL --pty /bin/bash --login
+```
+
+Navigate to wsi-cluster root
+
 ```bash
 # Create a virtual environment (while in wsi-cluster root)
 python3 -m venv wsi-cluster
@@ -27,10 +38,16 @@ Be sure to check the following:
   * Paths to data
   * Output directory paths
   * Any other paths in train_ssl.slurm
+  * Resources and allocations on slurm script
+  * Hyperparameters
   
-Checkpoints are saved to: <output_dir>/<run_name>/
 
 Submit the job with the following (from the wsi-cluster root):
 ```bash
 sbatch lightly_scripts/train_ssl.slurm
 ```
+
+## Extracting Features
+Checkpoints are saved to: <output_dir>/<run_name>/  
+
+
