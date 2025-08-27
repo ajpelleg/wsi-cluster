@@ -27,10 +27,8 @@ source wsi-cluster/bin/activate
 # Upgrade pip
 pip install --upgrade pip
 
-# Install dependencies (choose CUDA version)
-pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu118   # for CUDA 11.8
-# pip install --index-url https://download.pytorch.org/whl/cu121 -r requirements.txt # for CUDA 12.1
-# pip install --index-url https://download.pytorch.org/whl/cpu   -r requirements.txt # CPU only
+# Install dependencies
+pip install --extra-index-url https://download.pytorch.org/whl/cu118 -r requirements.txt --no-cache-dir
 ```
 
 ## Training an SSL Model
