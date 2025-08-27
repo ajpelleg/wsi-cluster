@@ -560,8 +560,8 @@ def main():
 
     trainer = Trainer(
         max_epochs=args.epochs,
-        accelerator="gpu",
-        devices=1,               
+        accelerator="auto",
+        devices=args.gpus,               
         sync_batchnorm=True,
         callbacks=[ckpt_cb, metrics_cb],
         default_root_dir=args.output_dir,
