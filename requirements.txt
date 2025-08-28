@@ -1,9 +1,9 @@
 # requirements.txt
-torch
-torchvision
-pytorch-lightning
-scipy
+# torch
+# torchvision
+# pytorch-lightning
 lightly
+scipy
 umap-learn
 scikit-learn
 pillow
