@@ -23,26 +23,21 @@ echo " CPUs/Task:$SLURM_CPUS_PER_TASK"
 echo
 
 # — override these with sbatch --export if you like — #
-CKPT=${CKPT:-"/PathLDM/experiments/checkpoints/simclr_final.ckpt"}
-METHOD=${METHOD:-"simclr"}
-DATA_DIR=${DATA_DIR:-"/PathLDM/features/data"}
-IMAGE_FOLDER=${IMAGE_FOLDER:-"tumor_segmentation_v2_05mpp_256/tiles/images"}
-BATCH_SIZE=${BATCH_SIZE:-64}
-NUM_WORKERS=${NUM_WORKERS:-8}
-OUTPUT_ROOT=${OUTPUT_ROOT:-"/PathLDM/experiments/features"}
+CKPT="experiments/checkpoints/simclr_final.ckpt"
+METHOD="simclr"
+DATA_DIR="data"
+IMAGE_FOLDER="tumor_segmentation_v2_05mpp_256/tiles/images"
+BATCH_SIZE=64
+OUTPUT_ROOT="results"
 
-echo "→ Checkpoint:   $CKPT"
-echo "→ Method:       $METHOD"
-echo "→ Data Dir:     $DATA_DIR"
-echo "→ ImageFolder:  $IMAGE_FOLDER"
-echo "→ BatchSize:    $BATCH_SIZE"
-echo "→ NumWorkers:   $NUM_WORKERS"
-echo "→ OutputRoot:   $OUTPUT_ROOT"
+echo "Checkpoint:   $CKPT"
+echo "Method:       $METHOD"
+echo "Data Dir:     $DATA_DIR"
+echo "ImageFolder:  $IMAGE_FOLDER"
+echo "BatchSize:    $BATCH_SIZE"
+echo "NumWorkers:   $NUM_WORKERS"
+echo "OutputRoot:   $OUTPUT_ROOT"
 echo
-
-# Make sure the host‐side dirs exist (matches the container’s /PathLDM/…)
-HOST_OUTPUT=${HOST_OUTPUT:-"/projects/academic/sunycell/PathLDM${OUTPUT_ROOT#/PathLDM}"}
-mkdir -p "$HOST_OUTPUT/$METHOD/individual"
 
 apptainer exec --nv \
   -B /projects/academic/sunycell/PathLDM:/PathLDM \
