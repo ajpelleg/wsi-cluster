@@ -4,6 +4,11 @@ A reproducible pipeline for **self-supervised learning (SSL) feature embeddings*
 This repo trains SSL models (SimCLR, MoCo, DINO, DenseCL) using PyTorch Lightning + Lightly, then extracts embeddings for downstream clustering or visualization.
 
 ---
+## Clone this Github repository
+```bash
+git clone https://github.com/ajpelleg/wsi-cluster.git
+```
+
 ## Environment Setup
 
 This repo uses a **Python venv** inside an **Apptainer image**.  
