@@ -59,7 +59,7 @@ exit
 ```
 
 ## Training an SSL Model
-Be sure to check the following, edit lightly_scripts/train_ssl.slurm as necessary:
+All data and outputs should be handled inside the wsi-cluster root but double check the following, edit lightly_scripts/train_ssl.slurm as necessary:
   * Paths to data
   * Output directory paths
   * Any other paths in train_ssl.slurm
