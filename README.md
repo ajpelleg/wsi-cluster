@@ -6,9 +6,10 @@ This repo trains SSL models (SimCLR, MoCo, DINO, DenseCL) using PyTorch Lightnin
 ---
 ## Environment Setup
 
-This repo uses a **Python venv**.  
+This repo uses a **Python venv** inside an **Apptainer image**.  
 
-Since the required packages are quite large, request allocations for an interactive job on CCR.
+This setup will require an interactive job on CCR.
+
 ```bash
 #Request with salloc command 
 salloc --clusters=faculty --partition=sunycell --qos=sunycell --mem=50G --nodes=1 --time=6:00:00 --ntasks-per-node=1 --gpus-per-node=2 --cpus-per-task=32
@@ -16,6 +17,19 @@ salloc --clusters=faculty --partition=sunycell --qos=sunycell --mem=50G --nodes=
 #After resources have been allocated, insert given jobid
 srun --jobid=JOBID_HERE --export=HOME,TERM,SHELL --pty /bin/bash --login
 ```
+
+Download the pytorch container from [NVIDIA](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch)  
+To avoid quota issues, set your cache directory to your *current* interactive slurm job's cache. 
+```bash
+# change cache dir
+export APPTAINER_CACHEDIR=$SLURMTMPDIR
+
+#pull the image
+apptainer pull <localname>.sif <container-registry>://<repository-name>
+```
+
+Run an interactive 
+
 
 Navigate to wsi-cluster root, then:  
 
