@@ -73,7 +73,7 @@ sbatch lightly_scripts/train_ssl.slurm
 ```
 
 ## Extracting Features
-Checkpoints are saved to: <output_dir>/<run_name>/  
+Checkpoints are saved to (unless changed): /wsi-cluster/experiments/$METHOD 
 
 **Required**: Point extract_features.slurm to your desired .ckpt file  
 
