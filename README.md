@@ -38,7 +38,7 @@ Start an interactive apptainer session to setup up our **venv** and bind it to t
 apptainer shell --nv -B <path_to_wsi-cluster_root>:/wsi-cluster <localname>.sif
 ```
 
-Navigate to wsi-cluster root, then setup **venv**:  
+Navigate to wsi-cluster root inside apptainer, then setup **venv**:  
 
 ```bash
 cd /wsi-cluster
