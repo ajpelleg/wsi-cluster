@@ -18,7 +18,7 @@ salloc --clusters=faculty --partition=sunycell --qos=sunycell --mem=50G --nodes=
 srun --jobid=JOBID_HERE --export=HOME,TERM,SHELL --pty /bin/bash --login
 ```
 
-Download the pytorch container from [NVIDIA](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch)  
+Download the pytorch container from [NVIDIA](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch).  
 To avoid quota issues, set your cache directory to your *current* interactive slurm job's cache. 
 ```bash
 # change cache dir
@@ -28,21 +28,29 @@ export APPTAINER_CACHEDIR=$SLURMTMPDIR
 apptainer pull <localname>.sif <container-registry>://<repository-name>
 ```
 
-Run an interactive 
+Start an interactive apptainer session to setup up our **venv** and bind it to the wsi-cluster root folder.  
+```bash
+apptainer shell --nv -B <path_to_wsi-cluster_root>:/wsi-cluster <localname>.sif
+```
 
-
-Navigate to wsi-cluster root, then:  
+Navigate to wsi-cluster root, then setup **venv**:  
 
 ```bash
-# Create a virtual environment (while in wsi-cluster root)
+cd /wsi-cluster
+
+# Create venv
 python3 -m venv wsi-cluster
 source wsi-cluster/bin/activate
 
-# Upgrade pip
-pip install --upgrade pip
-
 # Install dependencies
-pip install --extra-index-url https://download.pytorch.org/whl/cu118 -r requirements.txt --no-cache-dir
+pip install -r requirements.txt --no-cache-dir
+```
+
+**Venv** setup is now complete, deactivate and exit apptainer.  
+```bash
+deactivate
+
+exit
 ```
 
 ## Training an SSL Model
