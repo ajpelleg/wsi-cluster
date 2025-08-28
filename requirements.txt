@@ -1,7 +1,7 @@
 # requirements.txt
-torch==2.1.2
-torchvision==0.16.2
-pytorch-lightning>=2.0.0
+torch
+torchvision
+pytorch-lightning
 scipy
 lightly
 umap-learn
